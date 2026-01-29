@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon_atoms.ico" type="image/x-icon">
+    <title>DesignX Trading Journal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img src="https://mgx-backend-cdn.metadl.com/generate/images/187816/2026-01-28/ea6ea52a-de6e-4664-81ae-6cdd2c63f2ff.png"
+                    alt="DesignX Logo" class="logo">
+                <span class="brand-name">DesignX</span>
+            </div>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#dashboard" class="nav-link active"><i class="fas fa-chart-line"></i> Overview</a></li>
+                <li><a href="#trades" class="nav-link"><i class="fas fa-list"></i> Trades</a></li>
+                <li><a href="#deposits" class="nav-link"><i class="fas fa-arrow-down"></i> Deposits</a></li>
+                <li><a href="#withdrawals" class="nav-link"><i class="fas fa-arrow-up"></i> Withdrawals</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard" id="dashboard">
+        <div class="container">
+            <h2 class="section-title">Portfolio Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Trades</p>
+                        <p class="stat-value" id="totalTrades">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon success">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Win Rate</p>
+                        <p class="stat-value" id="winRate">0%</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" id="profitIcon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total P/L</p>
+                        <p class="stat-value" id="totalPL">R0.00</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Account Balance</p>
+                        <p class="stat-value" id="accountBalance">R0.00</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <button class="btn btn-primary" id="addTradeBtn">
+                    <i class="fas fa-plus"></i> New Trade
+                </button>
+                <button class="btn btn-success" id="addDepositBtn">
+                    <i class="fas fa-arrow-down"></i> Deposit
+                </button>
+                <button class="btn btn-danger" id="addWithdrawalBtn">
+                    <i class="fas fa-arrow-up"></i> Withdraw
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trades Section -->
+    <section class="trades-section" id="trades">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Trade History</h2>
+                <div class="section-controls">
+                    <select id="filterType" class="filter-select">
+                        <option value="all">All Types</option>
+                        <option value="long">Long</option>
+                        <option value="short">Short</option>
+                    </select>
+                    <select id="sortTrades" class="filter-select">
+                        <option value="date-desc">Newest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="pl-desc">Highest P/L</option>
+                        <option value="pl-asc">Lowest P/L</option>
+                    </select>
+                    <button class="btn btn-primary" id="addTradeBtn2">
+                        <i class="fas fa-plus"></i> Add Trade
+                    </button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="tradesTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Symbol</th>
+                            <th>Type</th>
+                            <th>Entry</th>
+                            <th>Exit</th>
+                            <th>Size</th>
+                            <th>P/L</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tradesTableBody">
+                        <tr class="empty-state">
+                            <td colspan="9">
+                                <i class="fas fa-chart-line"></i>
+                                <p>No trades recorded. Start tracking your performance.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deposits Section -->
+    <section class="deposits-section" id="deposits">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Deposit History</h2>
+                <button class="btn btn-success" id="addDepositBtn2">
+                    <i class="fas fa-plus"></i> Add Deposit
+                </button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="depositsTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="depositsTableBody">
+                        <tr class="empty-state">
+                            <td colspan="5">
+                                <i class="fas fa-arrow-down"></i>
+                                <p>No deposits recorded.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Withdrawals Section -->
+    <section class="withdrawals-section" id="withdrawals">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Withdrawal History</h2>
+                <button class="btn btn-danger" id="addWithdrawalBtn2">
+                    <i class="fas fa-plus"></i> Add Withdrawal
+                </button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="withdrawalsTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Method</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawalsTableBody">
+                        <tr class="empty-state">
+                            <td colspan="5">
+                                <i class="fas fa-arrow-up"></i>
+                                <p>No withdrawals recorded.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Trade Modal -->
+    <div class="modal" id="tradeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="tradeModalTitle">Add New Trade</h3>
+                <button class="modal-close" id="closeTradeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="tradeForm">
+                <input type="hidden" id="tradeId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tradeDate">Date</label>
+                        <input type="date" id="tradeDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeSymbol">Symbol</label>
+                        <input type="text" id="tradeSymbol" placeholder="e.g., AAPL, EURUSD" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeType">Type</label>
+                        <select id="tradeType" required>
+                            <option value="long">Long</option>
+                            <option value="short">Short</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeEntry">Entry Price (ZAR)</label>
+                        <input type="number" id="tradeEntry" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeExit">Exit Price (ZAR)</label>
+                        <input type="number" id="tradeExit" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradeSize">Position Size</label>
+                        <input type="number" id="tradeSize" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tradePL">P/L (ZAR)</label>
+                        <input type="number" id="tradePL" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="tradeNotes">Notes</label>
+                        <textarea id="tradeNotes" rows="3" placeholder="Add trade notes..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelTradeBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Trade</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Deposit Modal -->
+    <div class="modal" id="depositModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Deposit</h3>
+                <button class="modal-close" id="closeDepositModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="depositForm">
+                <div class="form-group">
+                    <label for="depositDate">Date</label>
+                    <input type="date" id="depositDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="depositAmount">Amount (ZAR)</label>
+                    <input type="number" id="depositAmount" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label for="depositMethod">Payment Method</label>
+                    <select id="depositMethod" required>
+                        <option value="bank-transfer">Bank Transfer</option>
+                        <option value="credit-card">Credit Card</option>
+                        <option value="debit-card">Debit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="crypto">Cryptocurrency</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="depositNotes">Notes</label>
+                    <textarea id="depositNotes" rows="3" placeholder="Add notes..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelDepositBtn">Cancel</button>
+                    <button type="submit" class="btn btn-success">Add Deposit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Withdrawal Modal -->
+    <div class="modal" id="withdrawalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Withdrawal</h3>
+                <button class="modal-close" id="closeWithdrawalModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="withdrawalForm">
+                <div class="form-group">
+                    <label for="withdrawalDate">Date</label>
+                    <input type="date" id="withdrawalDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="withdrawalAmount">Amount (ZAR)</label>
+                    <input type="number" id="withdrawalAmount" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label for="withdrawalMethod">Payment Method</label>
+                    <select id="withdrawalMethod" required>
+                        <option value="bank-transfer">Bank Transfer</option>
+                        <option value="credit-card">Credit Card</option>
+                        <option value="debit-card">Debit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="crypto">Cryptocurrency</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="withdrawalNotes">Notes</label>
+                    <textarea id="withdrawalNotes" rows="3" placeholder="Add notes..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelWithdrawalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Add Withdrawal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 DesignX Trading Journal. Professional Trading Platform.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="./script.js"></script>
+</body>
+
+</html>
