@@ -843,4 +843,9 @@ body {
 .data-table td:nth-child(5),
 .data-table td:nth-child(7) {
     font-weight: 600;
+
+}
+
+.notes{
+    width: 300px;
 }
