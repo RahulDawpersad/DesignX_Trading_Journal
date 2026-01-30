@@ -7,7 +7,6 @@ class TradingJournal {
         this.currentEditId = null;
         this.init();
     }
-
     init() {
         this.loadFromLocalStorage();
         this.setupEventListeners();
@@ -18,31 +17,26 @@ class TradingJournal {
         this.renderWithdrawals();
         this.setDefaultDates();
     }
-
     // Local Storage Methods
     loadFromLocalStorage() {
         const savedTrades = localStorage.getItem('tradingJournal_trades');
         const savedDeposits = localStorage.getItem('tradingJournal_deposits');
         const savedWithdrawals = localStorage.getItem('tradingJournal_withdrawals');
-
         if (savedTrades) this.trades = JSON.parse(savedTrades);
         if (savedDeposits) this.deposits = JSON.parse(savedDeposits);
         if (savedWithdrawals) this.withdrawals = JSON.parse(savedWithdrawals);
     }
-
     saveToLocalStorage() {
         localStorage.setItem('tradingJournal_trades', JSON.stringify(this.trades));
         localStorage.setItem('tradingJournal_deposits', JSON.stringify(this.deposits));
         localStorage.setItem('tradingJournal_withdrawals', JSON.stringify(this.withdrawals));
     }
-
     // Theme Methods
     setupTheme() {
         const savedTheme = localStorage.getItem('tradingJournal_theme') || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
         this.updateThemeIcon(savedTheme);
     }
-
     toggleTheme() {
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -50,17 +44,14 @@ class TradingJournal {
         localStorage.setItem('tradingJournal_theme', newTheme);
         this.updateThemeIcon(newTheme);
     }
-
     updateThemeIcon(theme) {
         const icon = document.querySelector('#themeToggle i');
         icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     }
-
     // Event Listeners
     setupEventListeners() {
         // Theme toggle
         document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
-
         // Hamburger menu
         const hamburger = document.getElementById('hamburger');
         const navMenu = document.getElementById('navMenu');
@@ -68,13 +59,12 @@ class TradingJournal {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
         });
-
         // Close menu when clicking nav links
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
-                
+               
                 // Smooth scroll to section
                 e.preventDefault();
                 const targetId = link.getAttribute('href');
@@ -82,38 +72,32 @@ class TradingJournal {
                 if (targetSection) {
                     targetSection.scrollIntoView({ behavior: 'smooth' });
                 }
-
                 // Update active link
                 document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
                 link.classList.add('active');
             });
         });
-
         // Trade modal
         document.getElementById('addTradeBtn').addEventListener('click', () => this.openTradeModal());
         document.getElementById('addTradeBtn2').addEventListener('click', () => this.openTradeModal());
         document.getElementById('closeTradeModal').addEventListener('click', () => this.closeTradeModal());
         document.getElementById('cancelTradeBtn').addEventListener('click', () => this.closeTradeModal());
         document.getElementById('tradeForm').addEventListener('submit', (e) => this.handleTradeSubmit(e));
-
         // Deposit modal
         document.getElementById('addDepositBtn').addEventListener('click', () => this.openDepositModal());
         document.getElementById('addDepositBtn2').addEventListener('click', () => this.openDepositModal());
         document.getElementById('closeDepositModal').addEventListener('click', () => this.closeDepositModal());
         document.getElementById('cancelDepositBtn').addEventListener('click', () => this.closeDepositModal());
         document.getElementById('depositForm').addEventListener('submit', (e) => this.handleDepositSubmit(e));
-
         // Withdrawal modal
         document.getElementById('addWithdrawalBtn').addEventListener('click', () => this.openWithdrawalModal());
         document.getElementById('addWithdrawalBtn2').addEventListener('click', () => this.openWithdrawalModal());
         document.getElementById('closeWithdrawalModal').addEventListener('click', () => this.closeWithdrawalModal());
         document.getElementById('cancelWithdrawalBtn').addEventListener('click', () => this.closeWithdrawalModal());
         document.getElementById('withdrawalForm').addEventListener('submit', (e) => this.handleWithdrawalSubmit(e));
-
         // Filter and sort
         document.getElementById('filterType').addEventListener('change', () => this.renderTrades());
         document.getElementById('sortTrades').addEventListener('change', () => this.renderTrades());
-
         // Close modals on backdrop click
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
@@ -123,20 +107,17 @@ class TradingJournal {
             });
         });
     }
-
     setDefaultDates() {
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('tradeDate').value = today;
         document.getElementById('depositDate').value = today;
         document.getElementById('withdrawalDate').value = today;
     }
-
     // Trade Methods
     openTradeModal(trade = null) {
         const modal = document.getElementById('tradeModal');
         const form = document.getElementById('tradeForm');
         const title = document.getElementById('tradeModalTitle');
-
         if (trade) {
             title.textContent = 'Edit Trade';
             document.getElementById('tradeId').value = trade.id;
@@ -153,19 +134,15 @@ class TradingJournal {
             form.reset();
             this.setDefaultDates();
         }
-
         modal.classList.add('active');
     }
-
     closeTradeModal() {
         document.getElementById('tradeModal').classList.remove('active');
         document.getElementById('tradeForm').reset();
         this.currentEditId = null;
     }
-
     handleTradeSubmit(e) {
         e.preventDefault();
-
         const tradeId = document.getElementById('tradeId').value;
         const trade = {
             id: tradeId || Date.now().toString(),
@@ -178,7 +155,6 @@ class TradingJournal {
             pl: parseFloat(document.getElementById('tradePL').value),
             notes: document.getElementById('tradeNotes').value
         };
-
         if (tradeId) {
             // Edit existing trade
             const index = this.trades.findIndex(t => t.id === tradeId);
@@ -189,20 +165,17 @@ class TradingJournal {
             // Add new trade
             this.trades.push(trade);
         }
-
         this.saveToLocalStorage();
         this.updateDashboard();
         this.renderTrades();
         this.closeTradeModal();
     }
-
     editTrade(id) {
         const trade = this.trades.find(t => t.id === id);
         if (trade) {
             this.openTradeModal(trade);
         }
     }
-
     deleteTrade(id) {
         if (confirm('Are you sure you want to delete this trade?')) {
             this.trades = this.trades.filter(t => t.id !== id);
@@ -211,19 +184,15 @@ class TradingJournal {
             this.renderTrades();
         }
     }
-
     renderTrades() {
         const tbody = document.getElementById('tradesTableBody');
         const filterType = document.getElementById('filterType').value;
         const sortBy = document.getElementById('sortTrades').value;
-
         let filteredTrades = [...this.trades];
-
         // Filter
         if (filterType !== 'all') {
             filteredTrades = filteredTrades.filter(t => t.type === filterType);
         }
-
         // Sort
         filteredTrades.sort((a, b) => {
             switch (sortBy) {
@@ -239,7 +208,6 @@ class TradingJournal {
                     return 0;
             }
         });
-
         if (filteredTrades.length === 0) {
             tbody.innerHTML = `
                 <tr class="empty-state">
@@ -251,7 +219,6 @@ class TradingJournal {
             `;
             return;
         }
-
         tbody.innerHTML = filteredTrades.map(trade => `
             <tr>
                 <td>${this.formatDate(trade.date)}</td>
@@ -261,7 +228,7 @@ class TradingJournal {
                 <td>$${trade.exit.toFixed(2)}</td>
                 <td>${trade.size}</td>
                 <td class="${trade.pl >= 0 ? 'pl-positive' : 'pl-negative'}">
-                    ${trade.pl >= 0 ? '+' : ''}R${trade.pl.toFixed(2)}
+                    ${trade.pl >= 0 ? '+R' : '-R'}${Math.abs(trade.pl).toFixed(2)}
                 </td>
                 <td>${trade.notes || '-'}</td>
                 <td>
@@ -277,21 +244,17 @@ class TradingJournal {
             </tr>
         `).join('');
     }
-
     // Deposit Methods
     openDepositModal() {
         document.getElementById('depositModal').classList.add('active');
         document.getElementById('depositForm').reset();
         this.setDefaultDates();
     }
-
     closeDepositModal() {
         document.getElementById('depositModal').classList.remove('active');
     }
-
     handleDepositSubmit(e) {
         e.preventDefault();
-
         const deposit = {
             id: Date.now().toString(),
             date: document.getElementById('depositDate').value,
@@ -299,14 +262,12 @@ class TradingJournal {
             method: document.getElementById('depositMethod').value,
             notes: document.getElementById('depositNotes').value
         };
-
         this.deposits.push(deposit);
         this.saveToLocalStorage();
         this.updateDashboard();
         this.renderDeposits();
         this.closeDepositModal();
     }
-
     deleteDeposit(id) {
         if (confirm('Are you sure you want to delete this deposit?')) {
             this.deposits = this.deposits.filter(d => d.id !== id);
@@ -315,10 +276,8 @@ class TradingJournal {
             this.renderDeposits();
         }
     }
-
     renderDeposits() {
         const tbody = document.getElementById('depositsTableBody');
-
         if (this.deposits.length === 0) {
             tbody.innerHTML = `
                 <tr class="empty-state">
@@ -330,9 +289,7 @@ class TradingJournal {
             `;
             return;
         }
-
         const sortedDeposits = [...this.deposits].sort((a, b) => new Date(b.date) - new Date(a.date));
-
         tbody.innerHTML = sortedDeposits.map(deposit => `
             <tr>
                 <td>${this.formatDate(deposit.date)}</td>
@@ -347,21 +304,17 @@ class TradingJournal {
             </tr>
         `).join('');
     }
-
     // Withdrawal Methods
     openWithdrawalModal() {
         document.getElementById('withdrawalModal').classList.add('active');
         document.getElementById('withdrawalForm').reset();
         this.setDefaultDates();
     }
-
     closeWithdrawalModal() {
         document.getElementById('withdrawalModal').classList.remove('active');
     }
-
     handleWithdrawalSubmit(e) {
         e.preventDefault();
-
         const withdrawal = {
             id: Date.now().toString(),
             date: document.getElementById('withdrawalDate').value,
@@ -369,14 +322,12 @@ class TradingJournal {
             method: document.getElementById('withdrawalMethod').value,
             notes: document.getElementById('withdrawalNotes').value
         };
-
         this.withdrawals.push(withdrawal);
         this.saveToLocalStorage();
         this.updateDashboard();
         this.renderWithdrawals();
         this.closeWithdrawalModal();
     }
-
     deleteWithdrawal(id) {
         if (confirm('Are you sure you want to delete this withdrawal?')) {
             this.withdrawals = this.withdrawals.filter(w => w.id !== id);
@@ -385,10 +336,8 @@ class TradingJournal {
             this.renderWithdrawals();
         }
     }
-
     renderWithdrawals() {
         const tbody = document.getElementById('withdrawalsTableBody');
-
         if (this.withdrawals.length === 0) {
             tbody.innerHTML = `
                 <tr class="empty-state">
@@ -400,9 +349,7 @@ class TradingJournal {
             `;
             return;
         }
-
         const sortedWithdrawals = [...this.withdrawals].sort((a, b) => new Date(b.date) - new Date(a.date));
-
         tbody.innerHTML = sortedWithdrawals.map(withdrawal => `
             <tr>
                 <td>${this.formatDate(withdrawal.date)}</td>
@@ -417,7 +364,6 @@ class TradingJournal {
             </tr>
         `).join('');
     }
-
     // Dashboard Methods
     updateDashboard() {
         const totalTrades = this.trades.length;
@@ -427,32 +373,27 @@ class TradingJournal {
         const totalDeposits = this.deposits.reduce((sum, d) => sum + d.amount, 0);
         const totalWithdrawals = this.withdrawals.reduce((sum, w) => sum + w.amount, 0);
         const accountBalance = totalDeposits - totalWithdrawals + totalPL;
-
         document.getElementById('totalTrades').textContent = totalTrades;
         document.getElementById('winRate').textContent = `${winRate}%`;
-        
+       
         const plElement = document.getElementById('totalPL');
-        plElement.textContent = `${totalPL >= 0 ? '+' : ''}R${totalPL.toFixed(2)}`;
+        plElement.textContent = `${totalPL >= 0 ? '+R' : '-R'}${Math.abs(totalPL).toFixed(2)}`;
         plElement.className = `stat-value ${totalPL >= 0 ? 'pl-positive' : 'pl-negative'}`;
-
         const profitIcon = document.getElementById('profitIcon');
         profitIcon.className = `stat-icon ${totalPL >= 0 ? 'success' : 'danger'}`;
-
         const balanceElement = document.getElementById('accountBalance');
         balanceElement.textContent = `R${accountBalance.toFixed(2)}`;
         balanceElement.className = `stat-value ${accountBalance >= 0 ? 'pl-positive' : 'pl-negative'}`;
     }
-
     // Utility Methods
     formatDate(dateString) {
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
         });
     }
-
     formatPaymentMethod(method) {
         const methods = {
             'bank-transfer': 'Bank Transfer',
@@ -465,9 +406,7 @@ class TradingJournal {
         return methods[method] || method;
     }
 }
-
 // Initialize the application
 const journal = new TradingJournal();
-
 // Make journal globally accessible for inline event handlers
 window.journal = journal;
