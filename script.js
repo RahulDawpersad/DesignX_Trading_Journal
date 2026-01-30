@@ -257,8 +257,8 @@ class TradingJournal {
                 <td>${this.formatDate(trade.date)}</td>
                 <td><strong>${trade.symbol}</strong></td>
                 <td><span class="trade-type ${trade.type}">${trade.type}</span></td>
-                <td>R${trade.entry.toFixed(2)}</td>
-                <td>R${trade.exit.toFixed(2)}</td>
+                <td>$${trade.entry.toFixed(2)}</td>
+                <td>$${trade.exit.toFixed(2)}</td>
                 <td>${trade.size}</td>
                 <td class="${trade.pl >= 0 ? 'pl-positive' : 'pl-negative'}">
                     ${trade.pl >= 0 ? '+' : ''}R${trade.pl.toFixed(2)}
